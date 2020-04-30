@@ -5,11 +5,9 @@ using UnityEngine.Formats.Alembic.Importer;
 
 namespace UnityEditor.Formats.Alembic.Importer
 {
-    [CustomEditor(typeof(AlembicStreamPlayer)), CanEditMultipleObjects]
-    internal class AlembicStreamPlayerEditor : Editor
+    [CustomEditor(typeof(AlembicStreamPlayer))]
+    class AlembicStreamPlayerEditor : Editor
     {
-        bool m_foldMisc = false;
-
         public override void OnInspectorGUI()
         {
             EditorGUI.BeginDisabledGroup((target.hideFlags & HideFlags.NotEditable) != HideFlags.None);
@@ -20,11 +18,6 @@ namespace UnityEditor.Formats.Alembic.Importer
 
             var streamPlayer = target as AlembicStreamPlayer;
             var targetStreamDesc = streamPlayer.StreamDescriptor;
-            var multipleTimeRanges = false;
-            foreach (AlembicStreamPlayer player in targets)
-            {
-                //
-            }
 
             EditorGUI.BeginDisabledGroup(true);
             EditorGUILayout.ObjectField(streamDescriptorObj);
@@ -36,7 +29,6 @@ namespace UnityEditor.Formats.Alembic.Importer
             }
 
             EditorGUILayout.LabelField(new GUIContent("Time Range"));
-            EditorGUI.BeginDisabledGroup(multipleTimeRanges);
 
             var abcStart = targetStreamDesc.mediaStartTime;
             var abcEnd = targetStreamDesc.mediaEndTime;
@@ -68,7 +60,6 @@ namespace UnityEditor.Formats.Alembic.Importer
             }
 
             EditorGUILayout.EndHorizontal();
-            EditorGUI.EndDisabledGroup();
             EditorGUIUtility.labelWidth = 0.0f;
 
             GUIStyle style = new GUIStyle();
@@ -82,20 +73,8 @@ namespace UnityEditor.Formats.Alembic.Importer
             EditorGUILayout.PropertyField(serializedObject.FindProperty("vertexMotionScale"));
             EditorGUILayout.Space();
 
-            m_foldMisc = EditorGUILayout.Foldout(m_foldMisc, "Misc");
-            if (m_foldMisc)
-            {
-                EditorGUI.indentLevel++;
-                EditorGUILayout.PropertyField(serializedObject.FindProperty("asyncLoad"));
-                EditorGUI.indentLevel--;
-            }
-
-#if UNITY_2018_3_OR_NEWER
             var prefabStatus = PrefabUtility.GetPrefabInstanceStatus(streamPlayer.gameObject);
             if (prefabStatus == PrefabInstanceStatus.NotAPrefab || prefabStatus == PrefabInstanceStatus.Disconnected)
-#else
-            if (PrefabUtility.GetPrefabType(streamPlayer.gameObject) == PrefabType.DisconnectedModelPrefabInstance)
-#endif
             {
                 EditorGUILayout.BeginHorizontal();
                 GUILayout.Space(16);
@@ -108,7 +87,7 @@ namespace UnityEditor.Formats.Alembic.Importer
 
             EditorGUI.EndDisabledGroup();
 
-            this.serializedObject.ApplyModifiedProperties();
+            serializedObject.ApplyModifiedProperties();
         }
     }
 }
