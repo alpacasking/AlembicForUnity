@@ -156,10 +156,8 @@ test_trigger:
     - .yamato/upm-ci.yml#pack
     {% for editor in editors %}
     {% for platform in platforms %}
-    {% if platform.name != 'centOS' %} 
     - .yamato/upm-ci.yml#test_{{platform.name}}_{{editor.version}}
     - .yamato/upm-ci.yml#testProject_{{platform.name}}_{{editor.version}}
-    {% endif %}  
     {% endfor %}
     {% endfor %}
 
@@ -214,8 +212,6 @@ publish:
     - .yamato/upm-ci.yml#pack
     {% for editor in editors %}
     {% for platform in platforms %}
-    {% if platform.name != 'centOS' %} 
     - .yamato/upm-ci.yml#test_{{platform.name}}_{{editor.version}}
-    {% endif %}  
     {% endfor %}
     {% endfor %}
